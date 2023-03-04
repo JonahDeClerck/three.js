@@ -62,7 +62,7 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
     wireframe: false
 });
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-sphere.position.set(-10, 10, 0);
+sphere.position.set(-10, 20, 0);
 scene.add(sphere);
 
 //gridhelper
@@ -75,18 +75,33 @@ scene.add(gridHelper);
 const gui = new dat.GUI();
 
 const options = {
-    sphereColor: '#ffea00'
+    sphereColor: '#ffea00',
+    wireframe: false,
+    speed: 0.01
 }
 
 gui.addColor(options, 'sphereColor').onChange(function(e){
     sphere.material.color.set(e);
 });
 
+gui.add(options, 'wireframe').onChange(function(e){
+    sphere.material.wireframe = e;
+});
+
+gui.add(options, 'speed', 0, 0.1);
+
+//sphere bounce
+
+let step = 0;
+
 //rotation
 
 function animate(){
     box.rotation.x += 0.01;
     box.rotation.y += 0.01;
+
+    step += options.speed;
+    sphere.position.y = 10 * Math.abs(Math.sin(step)); 
 
     renderer.render(scene, camera);
 }
